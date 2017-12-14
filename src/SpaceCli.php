@@ -14,6 +14,8 @@ function write () {
 
 abstract class SpaceCli {
 
+    const       EXT_INI = '.ini';
+
     /** @var array */
     protected   $params = [];
 
@@ -62,6 +64,9 @@ abstract class SpaceCli {
     /** @var string command name */
     protected   $command;
 
+    /** @var array configuration parameters from *.INI file */
+    protected   $config = [];
+
 
     /**
      * Class constructor
@@ -71,6 +76,7 @@ abstract class SpaceCli {
         echo $this->getTitle() . "\n";
         $this->commands = $this->_getCommandsAvailable();
         $this->_setDirs(debug_backtrace()[0]);
+        $this->_parseIniFile();
         $this->_parseArgv($argv);
         $this->construct();
         $this->_handleCommand($this->command);
@@ -91,6 +97,18 @@ abstract class SpaceCli {
         //echo __FILE__ . "\n";
         //echo __SCRIPT__ . "\n";
         //echo __ROOT__ . "\n";
+    }
+
+    /**
+     * Load configuration
+     * @return void
+     */
+    private function _parseIniFile () {
+        $fileName   = preg_replace('/\.php$/', static::EXT_INI, __SCRIPT__);
+        if (!file_exists($fileName)) {
+            return;
+        }
+        $this->config   = parse_ini_file($fileName, TRUE);
     }
 
     /**
