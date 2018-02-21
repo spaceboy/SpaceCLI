@@ -1,2 +1,2 @@
 # SpaceCLI
-Sceleton for PHP CLI applications
+Skeleton for PHP CLI applications
